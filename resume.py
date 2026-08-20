@@ -2,588 +2,825 @@ import streamlit as st
 import pandas as pd
 import base64
 from pathlib import Path
+import streamlit.components.v1 as components
 
-# =========================================================
+
+# ============================================================
 # PAGE CONFIG
-# =========================================================
+# ============================================================
 st.set_page_config(
     page_title="Tharani Sekar Resume",
     page_icon="📄",
     layout="wide"
 )
 
-# =========================================================
+
+# ============================================================
 # SESSION STATE
-# =========================================================
+# ============================================================
 if "visitor_count" not in st.session_state:
     st.session_state.visitor_count = 0
 
 
-# =========================================================
-# CONVERT PROFILE IMAGE TO BASE64
-# =========================================================
+# ============================================================
+# LOAD PROFILE PICTURE
+# ============================================================
 image_path = Path("profile.jpg")
 
 if image_path.exists():
     with open(image_path, "rb") as image_file:
-        encoded_image = base64.b64encode(image_file.read()).decode()
+        profile_base64 = base64.b64encode(
+            image_file.read()
+        ).decode("utf-8")
 else:
-    encoded_image = ""
+    profile_base64 = ""
 
 
-# =========================================================
-# PAGE CSS
-# =========================================================
-st.markdown("""
+# ============================================================
+# STREAMLIT PAGE STYLE
+# ============================================================
+st.markdown(
+    """
+    <style>
+
+    .stApp {
+        background-color: #e6e6e6;
+    }
+
+    .block-container {
+        max-width: 1100px;
+        padding-top: 1.5rem;
+        padding-bottom: 3rem;
+    }
+
+    div[data-testid="stMetric"] {
+        background-color: white;
+        border: 1px solid #d0d0d0;
+        padding: 12px;
+        border-radius: 7px;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# ============================================================
+# REAL RESUME DESIGN
+# ============================================================
+resume_html = f"""
+<!DOCTYPE html>
+<html>
+
+<head>
+
 <style>
 
-/* Whole Streamlit background */
-[data-testid="stAppViewContainer"] {
-    background: #d9d9d9;
-}
-
-/* Reduce Streamlit default spacing */
-.block-container {
-    max-width: 950px;
-    padding-top: 25px;
-    padding-bottom: 50px;
-}
-
-/* Hide Streamlit top empty header space */
-[data-testid="stHeader"] {
-    background: transparent;
-}
-
-/* Resume page */
-.resume-page {
-    width: 100%;
-    background: white;
-    color: #222;
-    padding: 38px 42px;
+* {{
     box-sizing: border-box;
+}}
+
+body {{
+    margin: 0;
+    padding: 0;
+    background: #e6e6e6;
     font-family: Arial, Helvetica, sans-serif;
-    box-shadow: 0px 4px 18px rgba(0,0,0,0.16);
-    min-height: 1120px;
-}
+}}
 
-/* Header */
-.resume-header {
+.resume {{
+    width: 760px;
+    min-height: 1075px;
+    margin: 10px auto;
+    background: white;
+    color: #222222;
+    padding: 35px 40px;
+    box-shadow: 0px 4px 18px rgba(0,0,0,0.18);
+}}
+
+
+/* ================= HEADER ================= */
+
+.header {{
     display: grid;
-    grid-template-columns: 180px 1fr;
+    grid-template-columns: 185px 1fr;
+    column-gap: 28px;
     align-items: center;
-    gap: 25px;
     margin-bottom: 22px;
-}
+}}
 
-.profile-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+.photo-area {{
+    text-align: center;
+}}
 
-.profile-photo {
+.photo {{
     width: 155px;
     height: 155px;
     border-radius: 50%;
     object-fit: cover;
-    border: 5px solid #243b53;
-}
+    object-position: center;
+    border: 4px solid #243b53;
+}}
 
-.name {
-    font-size: 39px;
-    line-height: 1;
-    font-weight: 800;
+.name {{
     color: #243b53;
-    letter-spacing: 1px;
-    margin: 0;
-}
+    font-size: 38px;
+    line-height: 0.98;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}}
 
-.role {
-    font-size: 16px;
-    color: #444;
-    letter-spacing: 2px;
-    margin-top: 8px;
-}
+.job-title {{
+    margin-top: 10px;
+    color: #333333;
+    font-size: 15px;
+    letter-spacing: 1.5px;
+}}
 
-/* Main two columns */
-.resume-grid {
+.contact-top {{
+    margin-top: 15px;
+    font-size: 11.5px;
+    line-height: 1.8;
+    color: #333333;
+}}
+
+
+/* ================= BODY ================= */
+
+.main-grid {{
     display: grid;
     grid-template-columns: 34% 66%;
-    gap: 22px;
-}
+    column-gap: 22px;
+}}
 
-/* Section bars */
-.section-title {
+.left {{
+    padding-right: 3px;
+}}
+
+.right {{
+    padding-left: 3px;
+}}
+
+
+.section-title {{
     background: #243b53;
     color: white;
-    font-size: 13px;
-    font-weight: bold;
-    text-align: center;
-    padding: 6px 8px;
-    margin-top: 16px;
-    margin-bottom: 10px;
+    font-size: 11.5px;
     letter-spacing: 0.5px;
-}
+    text-align: center;
+    padding: 5px 7px;
+    margin-top: 15px;
+    margin-bottom: 9px;
+    font-weight: bold;
+}}
 
-.left-column {
-    padding-right: 5px;
-}
+.text {{
+    font-size: 11.5px;
+    line-height: 1.45;
+    text-align: justify;
+}}
 
-.right-column {
-    padding-left: 5px;
-}
+.list {{
+    margin: 0;
+    padding-left: 18px;
+}}
 
-/* Normal text */
-.resume-page p {
-    font-size: 12.5px;
-    line-height: 1.55;
-    margin: 4px 0;
-}
+.list li {{
+    font-size: 11.5px;
+    line-height: 1.45;
+    margin-bottom: 4px;
+}}
 
-.resume-page ul {
-    margin-top: 6px;
-    padding-left: 20px;
-}
 
-.resume-page li {
-    font-size: 12.5px;
-    margin-bottom: 5px;
-}
-
-/* Contact section */
-.contact-item {
+.item-title {{
     font-size: 12px;
-    margin: 8px 0;
-}
-
-/* Main section item headings */
-.item-title {
-    font-size: 13px;
     font-weight: bold;
     color: #243b53;
-    margin-top: 9px;
-}
+    margin-top: 8px;
+}}
 
-.item-subtitle {
-    font-size: 12px;
+.item-subtitle {{
+    font-size: 11px;
     font-weight: bold;
     margin-top: 2px;
-}
+}}
 
-.item-date {
-    font-size: 11.5px;
-    color: #555;
-}
+.item-date {{
+    font-size: 10.5px;
+    color: #555555;
+    margin-top: 1px;
+}}
 
-/* Skill bars */
-.skill-row {
+.item-text {{
+    font-size: 11.3px;
+    line-height: 1.42;
+    margin-top: 4px;
+    margin-bottom: 8px;
+}}
+
+
+/* ================= SKILL BARS ================= */
+
+.skill-row {{
     display: grid;
-    grid-template-columns: 120px 1fr 35px;
+    grid-template-columns: 105px 1fr 30px;
     align-items: center;
-    gap: 8px;
-    margin: 8px 0;
-}
+    gap: 7px;
+    margin-bottom: 8px;
+}}
 
-.skill-name {
-    font-size: 11.5px;
-}
+.skill-name {{
+    font-size: 10.5px;
+}}
 
-.skill-bar {
+.skill-bg {{
+    width: 100%;
     height: 6px;
-    background: #d6dce2;
-    border-radius: 4px;
+    background-color: #d5dbe0;
+    border-radius: 5px;
     overflow: hidden;
-}
+}}
 
-.skill-fill {
+.skill-fill {{
     height: 100%;
-    background: #243b53;
-}
+    background-color: #243b53;
+}}
 
-.skill-percent {
-    font-size: 11px;
-    color: #555;
-}
+.skill-percent {{
+    font-size: 10px;
+    color: #555555;
+}}
 
-/* Divider */
-.resume-divider {
-    height: 1px;
-    background: #dedede;
-    margin: 10px 0;
-}
 
-/* Streamlit requirement area */
-.requirement-box {
-    background: white;
-    color: #222;
-    padding: 15px;
-    border-radius: 8px;
-}
+/* ================= DECORATION ================= */
+
+.top-shape {{
+    position: absolute;
+}}
 
 </style>
-""", unsafe_allow_html=True)
+
+</head>
 
 
-# =========================================================
-# ACTUAL RESUME
-# =========================================================
-resume_html = f"""
-<div class="resume-page">
+<body>
 
+<div class="resume">
+
+
+    <!-- ================================================= -->
     <!-- HEADER -->
-    <div class="resume-header">
+    <!-- ================================================= -->
 
-        <div class="profile-wrapper">
+    <div class="header">
+
+        <div class="photo-area">
+
             <img
-                src="data:image/jpeg;base64,{encoded_image}"
-                class="profile-photo"
+                src="data:image/jpeg;base64,{profile_base64}"
+                class="photo"
             >
+
         </div>
 
+
         <div>
-            <div class="name">THARANI<br>SEKAR</div>
-            <div class="role">IT NETWORKING STUDENT</div>
+
+            <div class="name">
+                THARANI<br>SEKAR
+            </div>
+
+            <div class="job-title">
+                IT NETWORKING STUDENT
+            </div>
+
+            <div class="contact-top">
+
+                ☎ 012-853 2854
+                &nbsp;&nbsp; | &nbsp;&nbsp;
+
+                ✉ tharanist06@gmail.com
+                <br>
+
+                📍 Johor, Malaysia
+
+            </div>
+
         </div>
 
     </div>
 
 
-    <!-- TWO COLUMN RESUME -->
-    <div class="resume-grid">
+    <!-- ================================================= -->
+    <!-- MAIN 2 COLUMN RESUME -->
+    <!-- ================================================= -->
 
-        <!-- ================= LEFT COLUMN ================= -->
-        <div class="left-column">
-
-            <div class="section-title">ABOUT ME</div>
-
-            <p>
-                I am a Semester 5 Diploma in Information Technology student
-                with a strong interest in computer networking, cybersecurity
-                and modern technologies. I enjoy learning new technical skills,
-                solving problems and gaining practical experience in the IT field.
-            </p>
+    <div class="main-grid">
 
 
-            <div class="contact-item">📞 012-853 2854</div>
-            <div class="contact-item">📧 tharanist06@gmail.com</div>
-            <div class="contact-item">📍 Johor, Malaysia</div>
+        <!-- ================= LEFT ================= -->
+
+        <div class="left">
 
 
-            <div class="section-title">LANGUAGE</div>
+            <div class="section-title">
+                ABOUT ME
+            </div>
 
-            <ul>
+            <div class="text">
+
+                I am a Semester 5 Diploma in Information
+                Technology student with a strong interest in
+                computer networking, cybersecurity and modern
+                technologies.
+
+                I enjoy learning new technical skills,
+                solving problems and gaining practical
+                experience in the IT field.
+
+            </div>
+
+
+            <div class="section-title">
+                LANGUAGE
+            </div>
+
+            <ul class="list">
+
                 <li>Bahasa Melayu</li>
                 <li>English</li>
                 <li>Tamil</li>
+
             </ul>
 
 
-            <div class="section-title">EXPERTISE</div>
+            <div class="section-title">
+                EXPERTISE
+            </div>
 
-            <ul>
+            <ul class="list">
+
                 <li>Cisco Packet Tracer</li>
                 <li>Network Configuration</li>
-                <li>VLAN & Inter-VLAN Routing</li>
-                <li>OSPF Routing</li>
+                <li>VLAN Configuration</li>
+                <li>Inter-VLAN Routing</li>
+                <li>OSPF</li>
+                <li>GRE Tunnel</li>
+                <li>HSRP</li>
+                <li>EtherChannel</li>
                 <li>Python Programming</li>
                 <li>Windows Server</li>
+                <li>Linux</li>
                 <li>Cybersecurity</li>
                 <li>ESP32 / IoT</li>
+
             </ul>
 
 
-            <div class="section-title">SOFT SKILLS</div>
+            <div class="section-title">
+                SOFT SKILLS
+            </div>
 
-            <ul>
+            <ul class="list">
+
                 <li>Teamwork</li>
                 <li>Communication</li>
                 <li>Problem Solving</li>
                 <li>Time Management</li>
+                <li>Responsibility</li>
                 <li>Willingness to Learn</li>
+
             </ul>
+
 
         </div>
 
 
-        <!-- ================= RIGHT COLUMN ================= -->
-        <div class="right-column">
+        <!-- ================= RIGHT ================= -->
 
-            <div class="section-title">EDUCATION</div>
+        <div class="right">
+
+
+            <div class="section-title">
+                EDUCATION
+            </div>
+
 
             <div class="item-title">
+
                 Diploma in Information Technology
+
             </div>
+
 
             <div class="item-subtitle">
+
                 Politeknik Malaysia
+
             </div>
+
 
             <div class="item-date">
+
                 Semester 5 | Networking
+
             </div>
 
-            <p>
-                Current studies include Computer Networking,
+
+            <div class="item-text">
+
+                Current study areas include Computer Networking,
                 Switching and Routing, Cybersecurity,
                 Python Programming, Server Administration
                 and Internet of Things.
-            </p>
+
+            </div>
 
 
-            <div class="section-title">ACADEMIC PROJECTS</div>
+
+            <div class="section-title">
+                ACADEMIC PROJECTS
+            </div>
 
 
             <div class="item-title">
+
                 Networking Configuration Project
+
             </div>
 
-            <p>
-                Configured VLANs, Inter-VLAN Routing,
+            <div class="item-text">
+
+                Configured and tested VLANs, Inter-VLAN Routing,
                 OSPF, GRE Tunnel, HSRP and EtherChannel
                 using Cisco Packet Tracer.
-            </p>
+
+            </div>
+
 
 
             <div class="item-title">
+
                 IoT Project
+
             </div>
 
-            <p>
+            <div class="item-text">
+
                 Developed an IoT-based project using ESP32
-                and sensors to collect and monitor real-time data.
-            </p>
+                and sensors to collect and monitor
+                real-time data.
+
+            </div>
+
 
 
             <div class="item-title">
+
                 Cybersecurity Practical
+
             </div>
 
-            <p>
+            <div class="item-text">
+
                 Performed basic network scanning,
                 traffic analysis and security testing
                 in a controlled laboratory environment.
-            </p>
+
+            </div>
+
 
 
             <div class="item-title">
+
                 Python Programming
+
             </div>
 
-            <p>
+            <div class="item-text">
+
                 Developed Python programs using functions,
                 classes, object-oriented programming
                 and Streamlit.
-            </p>
+
+            </div>
 
 
-            <div class="section-title">CAREER OBJECTIVE</div>
 
-            <p>
+            <div class="section-title">
+                CAREER OBJECTIVE
+            </div>
+
+
+            <div class="item-text">
+
                 To strengthen my knowledge and practical skills
                 in networking and information technology while
-                gaining industry experience that will prepare
-                me for a professional career in IT.
-            </p>
+                gaining industry experience that will prepare me
+                for a professional career in IT.
+
+            </div>
 
 
-            <div class="section-title">SKILLS SUMMARY</div>
 
-
-            <div class="skill-row">
-                <div class="skill-name">Networking</div>
-
-                <div class="skill-bar">
-                    <div class="skill-fill"
-                         style="width:85%;">
-                    </div>
-                </div>
-
-                <div class="skill-percent">85%</div>
+            <div class="section-title">
+                SKILLS SUMMARY
             </div>
 
 
             <div class="skill-row">
-                <div class="skill-name">Cisco</div>
 
-                <div class="skill-bar">
-                    <div class="skill-fill"
-                         style="width:80%;">
-                    </div>
+                <div class="skill-name">
+                    Networking
                 </div>
 
-                <div class="skill-percent">80%</div>
+                <div class="skill-bg">
+
+                    <div
+                        class="skill-fill"
+                        style="width:85%">
+                    </div>
+
+                </div>
+
+                <div class="skill-percent">
+                    85%
+                </div>
+
             </div>
+
 
 
             <div class="skill-row">
-                <div class="skill-name">Python</div>
 
-                <div class="skill-bar">
-                    <div class="skill-fill"
-                         style="width:75%;">
-                    </div>
+                <div class="skill-name">
+                    Cisco
                 </div>
 
-                <div class="skill-percent">75%</div>
+                <div class="skill-bg">
+
+                    <div
+                        class="skill-fill"
+                        style="width:80%">
+                    </div>
+
+                </div>
+
+                <div class="skill-percent">
+                    80%
+                </div>
+
             </div>
+
 
 
             <div class="skill-row">
-                <div class="skill-name">Cybersecurity</div>
 
-                <div class="skill-bar">
-                    <div class="skill-fill"
-                         style="width:70%;">
-                    </div>
+                <div class="skill-name">
+                    Python
                 </div>
 
-                <div class="skill-percent">70%</div>
+                <div class="skill-bg">
+
+                    <div
+                        class="skill-fill"
+                        style="width:75%">
+                    </div>
+
+                </div>
+
+                <div class="skill-percent">
+                    75%
+                </div>
+
             </div>
+
 
 
             <div class="skill-row">
-                <div class="skill-name">Windows Server</div>
 
-                <div class="skill-bar">
-                    <div class="skill-fill"
-                         style="width:75%;">
-                    </div>
+                <div class="skill-name">
+                    Cybersecurity
                 </div>
 
-                <div class="skill-percent">75%</div>
+                <div class="skill-bg">
+
+                    <div
+                        class="skill-fill"
+                        style="width:70%">
+                    </div>
+
+                </div>
+
+                <div class="skill-percent">
+                    70%
+                </div>
+
             </div>
+
+
+
+            <div class="skill-row">
+
+                <div class="skill-name">
+                    Windows Server
+                </div>
+
+                <div class="skill-bg">
+
+                    <div
+                        class="skill-fill"
+                        style="width:75%">
+                    </div>
+
+                </div>
+
+                <div class="skill-percent">
+                    75%
+                </div>
+
+            </div>
+
 
         </div>
 
+
     </div>
 
+
 </div>
+
+</body>
+
+</html>
 """
 
-st.markdown(resume_html, unsafe_allow_html=True)
+
+# ============================================================
+# IMPORTANT:
+# Render HTML using components.html instead of st.markdown
+# ============================================================
+components.html(
+    resume_html,
+    height=1130,
+    scrolling=False
+)
 
 
-# =========================================================
-# REQUIRED STREAMLIT ELEMENTS
-# Kept BELOW the resume so the CV remains clean.
-# =========================================================
+# ============================================================
+# REQUIRED STREAMLIT FEATURES
+# ============================================================
+st.divider()
 
-st.write("")
-st.write("")
-
-with st.expander("📌 Streamlit Resume Features"):
-
-    st.subheader("Resume Information")
-
-    # -----------------------------------------------------
-    # METRIC + COLUMNS
-    # -----------------------------------------------------
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.metric("Semester", "5")
-
-    with col2:
-        st.metric("Programme", "Diploma IT")
-
-    with col3:
-        st.metric("Field", "Networking")
+st.subheader("Resume Details")
 
 
-    # -----------------------------------------------------
-    # TABS
-    # -----------------------------------------------------
-    tab1, tab2, tab3 = st.tabs(
-        [
-            "Education",
-            "Skills",
-            "Contact"
-        ]
+# ============================================================
+# METRIC + COLUMN
+# ============================================================
+metric1, metric2, metric3 = st.columns(3)
+
+with metric1:
+    st.metric(
+        "Current Semester",
+        "5"
+    )
+
+with metric2:
+    st.metric(
+        "Programme",
+        "Diploma IT"
+    )
+
+with metric3:
+    st.metric(
+        "Field",
+        "Networking"
     )
 
 
-    # -----------------------------------------------------
-    # STATIC DATAFRAME
-    # -----------------------------------------------------
-    with tab1:
+# ============================================================
+# TABS
+# ============================================================
+tab1, tab2, tab3 = st.tabs(
+    [
+        "Education",
+        "Skills",
+        "Contact"
+    ]
+)
 
-        education_data = {
-            "Programme": [
-                "Diploma in Information Technology"
-            ],
-            "Semester": [
-                "Semester 5"
-            ],
-            "Field": [
-                "Networking"
-            ],
-            "Institution": [
-                "Politeknik Malaysia"
-            ]
-        }
 
-        education_df = pd.DataFrame(education_data)
+# ============================================================
+# PANDAS + STATIC DATAFRAME
+# ============================================================
+with tab1:
 
-        st.dataframe(
-            education_df,
-            use_container_width=True,
-            hide_index=True
+    education_data = {
+        "Programme": [
+            "Diploma in Information Technology"
+        ],
+
+        "Semester": [
+            "Semester 5"
+        ],
+
+        "Field": [
+            "Networking"
+        ],
+
+        "Institution": [
+            "Politeknik Malaysia"
+        ]
+    }
+
+    education_df = pd.DataFrame(
+        education_data
+    )
+
+    st.dataframe(
+        education_df,
+        use_container_width=True,
+        hide_index=True
+    )
+
+
+# ============================================================
+# DATA EDITOR
+# ============================================================
+with tab2:
+
+    skills_data = {
+
+        "Skill": [
+
+            "Cisco Networking",
+            "Python Programming",
+            "Windows Server",
+            "Cybersecurity",
+            "ESP32 / IoT"
+
+        ],
+
+        "Level": [
+
+            "Intermediate",
+            "Intermediate",
+            "Intermediate",
+            "Basic",
+            "Intermediate"
+
+        ]
+    }
+
+    skills_df = pd.DataFrame(
+        skills_data
+    )
+
+    st.data_editor(
+        skills_df,
+        use_container_width=True,
+        hide_index=True
+    )
+
+
+# ============================================================
+# POPOVER
+# ============================================================
+with tab3:
+
+    st.write(
+        "Contact me using the information below."
+    )
+
+    with st.popover(
+        "View Contact Details"
+    ):
+
+        st.write(
+            "**THARANI SEKAR**"
+        )
+
+        st.write(
+            "IT Networking Student"
+        )
+
+        st.write(
+            "📞 012-853 2854"
+        )
+
+        st.write(
+            "📧 tharanist06@gmail.com"
+        )
+
+        st.write(
+            "📍 Johor, Malaysia"
         )
 
 
-    # -----------------------------------------------------
-    # DATA EDITOR
-    # -----------------------------------------------------
-    with tab2:
-
-        skills_data = {
-            "Skill": [
-                "Networking",
-                "Cisco Packet Tracer",
-                "Python",
-                "Windows Server",
-                "Cybersecurity",
-                "ESP32 / IoT"
-            ],
-
-            "Level": [
-                "Intermediate",
-                "Intermediate",
-                "Intermediate",
-                "Intermediate",
-                "Basic",
-                "Intermediate"
-            ]
-        }
-
-        skills_df = pd.DataFrame(skills_data)
-
-        st.data_editor(
-            skills_df,
-            use_container_width=True,
-            hide_index=True
-        )
-
-
-    # -----------------------------------------------------
-    # POPOVER
-    # -----------------------------------------------------
-    with tab3:
-
-        st.write("My contact information")
-
-        with st.popover("View Contact Details"):
-
-            st.write("**THARANI SEKAR**")
-            st.write("IT Networking Student")
-            st.write("📞 012-853 2854")
-            st.write("📧 tharanist06@gmail.com")
-            st.write("📍 Johor, Malaysia")
-
-
-# =========================================================
+# ============================================================
 # SIDEBAR
-# =========================================================
+# ============================================================
 st.sidebar.image(
     "profile.jpg",
     width=130
@@ -634,24 +871,29 @@ st.sidebar.write(
 )
 
 
-# =========================================================
+# ============================================================
 # 7 USER EVENTS
-# =========================================================
+# ============================================================
+st.divider()
 
-with st.expander("🖱 Interactive Resume Section"):
+with st.expander(
+    "Interactive Resume"
+):
 
     st.write(
-        "This section demonstrates the required user events."
+        "Interactive elements for the Streamlit assignment."
     )
 
-    # EVENT 1 - TEXT INPUT
+
+    # 1. TEXT INPUT
     visitor_name = st.text_input(
         "Enter your name"
     )
 
-    # EVENT 2 - SELECTBOX
+
+    # 2. SELECTBOX
     interest = st.selectbox(
-        "Which IT area are you interested in?",
+        "Choose an IT area",
         [
             "Networking",
             "Cybersecurity",
@@ -660,20 +902,23 @@ with st.expander("🖱 Interactive Resume Section"):
         ]
     )
 
-    # EVENT 3 - SLIDER
+
+    # 3. SLIDER
     rating = st.slider(
         "Rate my resume",
-        1,
-        10,
-        5
+        min_value=1,
+        max_value=10,
+        value=5
     )
 
-    # EVENT 4 - CHECKBOX
+
+    # 4. CHECKBOX
     contact_interest = st.checkbox(
         "I am interested in contacting Tharani"
     )
 
-    # EVENT 5 - RADIO
+
+    # 5. RADIO
     contact_method = st.radio(
         "Preferred contact method",
         [
@@ -682,34 +927,43 @@ with st.expander("🖱 Interactive Resume Section"):
         ]
     )
 
-    # EVENT 6 - TOGGLE
+
+    # 6. TOGGLE
     show_objective = st.toggle(
         "Show career objective"
     )
 
+
     if show_objective:
+
         st.info(
-            "My goal is to strengthen my networking "
-            "and IT skills and gain industry experience."
+            "My career objective is to strengthen "
+            "my networking and IT skills and gain "
+            "professional industry experience."
         )
 
-    # EVENT 7 - BUTTON
-    if st.button("Submit"):
+
+    # 7. BUTTON
+    if st.button(
+        "Submit"
+    ):
 
         st.session_state.visitor_count += 1
+
 
         if visitor_name:
 
             st.success(
                 f"Thank you, {visitor_name}, "
-                "for viewing my resume!"
+                "for viewing my resume."
             )
 
         else:
 
             st.success(
-                "Thank you for viewing my resume!"
+                "Thank you for viewing my resume."
             )
+
 
     st.caption(
         f"Total interactions: "
@@ -717,9 +971,11 @@ with st.expander("🖱 Interactive Resume Section"):
     )
 
 
-# =========================================================
+# ============================================================
 # FOOTER
-# =========================================================
+# ============================================================
+st.divider()
+
 st.caption(
     "THARANI SEKAR | IT NETWORKING STUDENT"
 )
