@@ -1,30 +1,127 @@
 import streamlit as st
 import pandas as pd
 
-# PAGE SETTINGS
-
-st.set_page_config( 
+# -------------------------------------------------
+# PAGE SETTING
+# -------------------------------------------------
+st.set_page_config(
     page_title="Tharani Sekar Resume",
-    page_icon="💻",
+    page_icon="📄",
     layout="wide"
 )
 
+# -------------------------------------------------
 # SESSION STATE
-
+# -------------------------------------------------
 if "visitor_count" not in st.session_state:
     st.session_state.visitor_count = 0
 
 
-# HEADER SECTION
+# -------------------------------------------------
+# CUSTOM DESIGN
+# -------------------------------------------------
+st.markdown("""
+<style>
 
-photo, info = st.columns([1, 3])
+.block-container {
+    max-width: 1000px;
+    padding-top: 25px;
+    padding-bottom: 40px;
+}
 
-with photo:
-    st.image("profile.jpg", width=220)
+h1 {
+    font-size: 42px !important;
+    margin-bottom: 0px;
+}
 
-with info:
-    st.title("THARANI SEKAR")
-    st.subheader("IT NETWORKING STUDENT")
+h2 {
+    font-size: 22px !important;
+}
+
+h3 {
+    color: #243B53;
+}
+
+.resume-title {
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: #526777;
+    margin-top: -10px;
+}
+
+.section-title {
+    background-color: #243B53;
+    color: white;
+    padding: 7px 12px;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.contact-text {
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.small-text {
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+div[data-testid="stMetric"] {
+    border: 1px solid #DDDDDD;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
+# -------------------------------------------------
+# RESUME HEADER
+# -------------------------------------------------
+photo_col, name_col = st.columns([1, 2.7])
+
+with photo_col:
+    st.image("profile.jpg", width=210)
+
+with name_col:
+    st.markdown("# THARANI SEKAR")
+
+    st.markdown(
+        '<div class="resume-title">IT NETWORKING STUDENT</div>',
+        unsafe_allow_html=True
+    )
+
+    st.write("")
+
+    st.markdown("""
+    <div class="contact-text">
+    📞 012-853 2854<br>
+    📧 tharanist06@gmail.com<br>
+    📍 Johor, Malaysia
+    </div>
+    """, unsafe_allow_html=True)
+
+st.divider()
+
+
+# -------------------------------------------------
+# MAIN RESUME TWO COLUMN DESIGN
+# -------------------------------------------------
+left, right = st.columns([1, 1.8], gap="large")
+
+
+# =================================================
+# LEFT SIDE
+# =================================================
+with left:
+
+    st.markdown(
+        '<div class="section-title">ABOUT ME</div>',
+        unsafe_allow_html=True
+    )
 
     st.write(
         "I am a Semester 5 Diploma in Information Technology student "
@@ -33,108 +130,187 @@ with info:
         "solving problems and gaining practical experience in the IT field."
     )
 
-    st.write("📞 **Phone:** 012-853 2854")
-    st.write("📧 **Email:** tharanist06@gmail.com")
-    st.write("📍 **Location:** Johor, Malaysia")
 
+    st.markdown(
+        '<div class="section-title">LANGUAGES</div>',
+        unsafe_allow_html=True
+    )
+
+    st.write("• Bahasa Melayu")
+    st.write("• English")
+    st.write("• Tamil")
+
+
+    st.markdown(
+        '<div class="section-title">TECHNICAL SKILLS</div>',
+        unsafe_allow_html=True
+    )
+
+    st.write("• Cisco Packet Tracer")
+    st.write("• VLAN Configuration")
+    st.write("• Inter-VLAN Routing")
+    st.write("• OSPF")
+    st.write("• GRE Tunnel")
+    st.write("• HSRP")
+    st.write("• EtherChannel")
+    st.write("• Python Programming")
+    st.write("• Windows Server")
+    st.write("• Linux")
+    st.write("• Cybersecurity")
+    st.write("• ESP32 / IoT")
+
+
+    st.markdown(
+        '<div class="section-title">SOFT SKILLS</div>',
+        unsafe_allow_html=True
+    )
+
+    st.write("• Teamwork")
+    st.write("• Communication")
+    st.write("• Problem Solving")
+    st.write("• Time Management")
+    st.write("• Responsible")
+    st.write("• Willing to Learn")
+
+
+# =================================================
+# RIGHT SIDE
+# =================================================
+with right:
+
+    st.markdown(
+        '<div class="section-title">EDUCATION</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown("### Diploma in Information Technology")
+    st.write("**Politeknik Malaysia**")
+    st.write("Semester 5")
+    st.write("Specialization: Networking")
+
+    st.write("")
+
+    st.write(
+        "Current study areas include Computer Networking, "
+        "Switching and Routing, Cybersecurity, Python Programming, "
+        "Server Administration and Internet of Things."
+    )
+
+
+    st.markdown(
+        '<div class="section-title">ACADEMIC PROJECTS</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown("#### Networking Configuration Project")
+
+    st.write(
+        "Configured and tested VLANs, Inter-VLAN Routing, OSPF, "
+        "GRE Tunnel, HSRP and EtherChannel using Cisco Packet Tracer."
+    )
+
+    st.markdown("#### IoT Project")
+
+    st.write(
+        "Developed an IoT-based project using ESP32 and sensors "
+        "to collect and monitor real-time data."
+    )
+
+    st.markdown("#### Cybersecurity Practical")
+
+    st.write(
+        "Performed basic network scanning, traffic analysis and "
+        "security testing in a controlled laboratory environment."
+    )
+
+    st.markdown("#### Python Programming")
+
+    st.write(
+        "Developed Python programs using functions, classes, "
+        "object-oriented programming and Streamlit."
+    )
+
+
+    st.markdown(
+        '<div class="section-title">CAREER OBJECTIVE</div>',
+        unsafe_allow_html=True
+    )
+
+    st.write(
+        "To develop my knowledge and practical skills in networking "
+        "and information technology while gaining industry experience "
+        "that will prepare me for a professional career in IT."
+    )
+
+
+# -------------------------------------------------
+# QUICK RESUME SUMMARY
+# -------------------------------------------------
 st.divider()
 
+m1, m2, m3 = st.columns(3)
 
-# QUICK INFORMATION / METRICS
+with m1:
+    st.metric("Current Semester", "5")
 
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.metric("Current Semester", "Semester 5")
-
-with col2:
+with m2:
     st.metric("Programme", "Diploma IT")
 
-with col3:
-    st.metric("Specialization", "Networking")
+with m3:
+    st.metric("Field", "Networking")
 
 
-# RESUME TABS
-
+# -------------------------------------------------
+# STREAMLIT REQUIREMENTS
+# -------------------------------------------------
 st.divider()
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(
-    ["About Me", "Education", "Skills", "Projects", "Contact"]
+st.subheader("Additional Resume Information")
+
+tab1, tab2, tab3 = st.tabs(
+    ["Education Details", "Skills Details", "Contact"]
 )
 
 
-# ABOUT ME
-
+# -------------------------------------------------
+# DATAFRAME
+# -------------------------------------------------
 with tab1:
-    st.header("About Me")
-
-    st.write(
-        "I am currently pursuing a Diploma in Information Technology "
-        "and I am now in Semester 5. My main interest is computer networking. "
-        "I enjoy learning how networks work, configuring network devices, "
-        "troubleshooting problems and exploring cybersecurity."
-    )
-
-    st.write(
-        "I am a responsible and hardworking student who is always willing "
-        "to learn new skills and gain more practical experience in the IT field."
-    )
-
-    st.subheader("Career Objective")
-
-    st.write(
-        "My goal is to improve my networking and information technology skills, "
-        "gain practical working experience and prepare myself for a future career "
-        "in the IT industry."
-    )
-
-
-# EDUCATION
-
-with tab2:
-    st.header("Education")
 
     education_data = {
-        "Programme": ["Diploma in Information Technology"],
-        "Semester": ["Semester 5"],
-        "Field": ["Information Technology / Networking"],
-        "Institution": ["Politeknik Malaysia"]
+        "Programme": [
+            "Diploma in Information Technology"
+        ],
+        "Semester": [
+            "Semester 5"
+        ],
+        "Specialization": [
+            "Networking"
+        ],
+        "Institution": [
+            "Politeknik Malaysia"
+        ]
     }
 
     education_df = pd.DataFrame(education_data)
 
     st.dataframe(
         education_df,
-        use_container_width=True
+        use_container_width=True,
+        hide_index=True
     )
 
-    st.subheader("Current Study Areas")
 
-    st.write("• Computer Networking")
-    st.write("• Switching and Routing")
-    st.write("• Cybersecurity")
-    st.write("• Python Programming")
-    st.write("• Server Administration")
-    st.write("• Internet of Things (IoT)")
-    st.write("• Network Security")
-
-
-# SKILLS
-with tab3:
-    st.header("Technical Skills")
+# -------------------------------------------------
+# DATA EDITOR
+# -------------------------------------------------
+with tab2:
 
     skills_data = {
-        "Skill": [
-            "Cisco Packet Tracer",
-            "VLAN Configuration",
-            "Inter-VLAN Routing",
-            "OSPF",
-            "GRE Tunnel",
-            "HSRP",
-            "EtherChannel",
+        "Technical Skill": [
+            "Cisco Networking",
             "Python Programming",
             "Windows Server",
-            "Linux",
             "Cybersecurity",
             "ESP32 / IoT"
         ],
@@ -143,13 +319,6 @@ with tab3:
             "Intermediate",
             "Intermediate",
             "Intermediate",
-            "Intermediate",
-            "Basic",
-            "Basic",
-            "Intermediate",
-            "Intermediate",
-            "Intermediate",
-            "Basic",
             "Basic",
             "Intermediate"
         ]
@@ -159,65 +328,20 @@ with tab3:
 
     st.data_editor(
         skills_df,
-        use_container_width=True
-    )
-
-    st.subheader("Soft Skills")
-
-    st.write("• Teamwork")
-    st.write("• Communication")
-    st.write("• Problem Solving")
-    st.write("• Time Management")
-    st.write("• Responsibility")
-    st.write("• Willingness to Learn")
-
-
-# PROJECTS
-
-with tab4:
-    st.header("Academic Projects")
-
-    st.subheader("🌐 Networking Configuration Project")
-
-    st.write(
-        "Configured and tested different networking technologies using "
-        "Cisco Packet Tracer, including VLANs, Inter-VLAN Routing, OSPF, "
-        "GRE Tunnel, HSRP and EtherChannel."
-    )
-
-    st.subheader("📡 IoT Project")
-
-    st.write(
-        "Developed an IoT-based project using ESP32 and sensors "
-        "to collect and monitor real-time data."
-    )
-
-    st.subheader("🔐 Cybersecurity Practical")
-
-    st.write(
-        "Performed basic network scanning, traffic analysis and "
-        "security testing in a controlled laboratory environment."
-    )
-
-    st.subheader("🐍 Python Programming")
-
-    st.write(
-        "Developed Python programs using functions, classes, "
-        "object-oriented programming and Streamlit."
+        use_container_width=True,
+        hide_index=True
     )
 
 
-# CONTACT TAB
-with tab5:
-    st.header("Contact")
+# -------------------------------------------------
+# POPOVER
+# -------------------------------------------------
+with tab3:
 
-    st.write("Feel free to contact me for more information.")
+    st.write("You can contact me using the information below.")
 
-    st.write("📞 **Phone:** 012-853 2854")
-    st.write("📧 **Email:** tharanist06@gmail.com")
-    st.write("📍 **Location:** Johor, Malaysia")
+    with st.popover("View Contact Information"):
 
-    with st.popover("📩 More Contact Details"):
         st.write("**THARANI SEKAR**")
         st.write("IT Networking Student")
         st.write("📞 012-853 2854")
@@ -225,112 +349,123 @@ with tab5:
         st.write("📍 Johor, Malaysia")
 
 
+# -------------------------------------------------
 # SIDEBAR
-st.sidebar.title("My Resume")
+# -------------------------------------------------
+st.sidebar.image("profile.jpg", width=140)
 
-st.sidebar.image("profile.jpg", width=150)
+st.sidebar.title("THARANI SEKAR")
 
-st.sidebar.subheader("THARANI SEKAR")
 st.sidebar.write("IT Networking Student")
 
 st.sidebar.divider()
 
-st.sidebar.subheader("Contact")
 st.sidebar.write("📞 012-853 2854")
 st.sidebar.write("📧 tharanist06@gmail.com")
 st.sidebar.write("📍 Johor, Malaysia")
 
 st.sidebar.divider()
 
-st.sidebar.subheader("Languages")
-st.sidebar.write("• Bahasa Melayu")
-st.sidebar.write("• English")
-st.sidebar.write("• Tamil")
+st.sidebar.subheader("Resume Navigation")
+
+resume_section = st.sidebar.selectbox(
+    "View:",
+    [
+        "Full Resume",
+        "Education",
+        "Skills",
+        "Projects"
+    ]
+)
 
 
-# INTERACTIVE SECTION
+# -------------------------------------------------
+# INTERACTIVE SECTION - 7 USER EVENTS
+# -------------------------------------------------
 st.divider()
-st.header("Interactive Resume")
 
-st.write("You can interact with my online resume below.")
+with st.expander("Interactive Resume Section"):
 
-# User Event 1
-visitor_name = st.text_input("Enter your name:")
-
-# User Event 2
-interest = st.selectbox(
-    "Which IT field are you interested in?",
-    [
-        "Networking",
-        "Cybersecurity",
-        "Programming",
-        "IoT"
-    ]
-)
-
-# User Event 3
-rating = st.slider(
-    "Rate my online resume:",
-    1,
-    10,
-    5
-)
-
-# User Event 4
-contact_interest = st.checkbox(
-    "I am interested in contacting Tharani"
-)
-
-# User Event 5
-contact_method = st.radio(
-    "Preferred contact method:",
-    [
-        "Email",
-        "Phone"
-    ]
-)
-
-# User Event 6
-show_objective = st.toggle(
-    "Show career objective"
-)
-
-if show_objective:
-    st.info(
-        "My career objective is to develop my networking and IT skills "
-        "and gain practical experience in the technology industry."
+    st.caption(
+        "This section demonstrates Streamlit user interaction elements."
     )
 
-# User Event 7
-if st.button("Submit"):
-    st.session_state.visitor_count += 1
+    # EVENT 1
+    visitor_name = st.text_input(
+        "Enter your name"
+    )
 
-    if visitor_name:
-        st.success(
-            f"Thank you, {visitor_name}! Your response has been submitted."
+    # EVENT 2
+    area_interest = st.selectbox(
+        "Area of interest",
+        [
+            "Networking",
+            "Cybersecurity",
+            "Programming",
+            "Internet of Things"
+        ]
+    )
+
+    # EVENT 3
+    rating = st.slider(
+        "Rate this resume",
+        1,
+        10,
+        5
+    )
+
+    # EVENT 4
+    contact_interest = st.checkbox(
+        "Interested to contact me"
+    )
+
+    # EVENT 5
+    contact_method = st.radio(
+        "Preferred contact method",
+        [
+            "Email",
+            "Phone"
+        ]
+    )
+
+    # EVENT 6
+    show_objective = st.toggle(
+        "Show career objective"
+    )
+
+    if show_objective:
+        st.info(
+            "My goal is to develop my networking and IT skills "
+            "and gain practical industry experience."
         )
-    else:
-        st.success(
-            "Thank you for visiting my online resume!"
-        )
 
-# Display interaction information
-st.write("**Selected IT Interest:**", interest)
-st.write("**Resume Rating:**", rating)
-st.write("**Preferred Contact:**", contact_method)
+    # EVENT 7
+    if st.button("Submit"):
 
-if contact_interest:
-    st.write("✅ Visitor is interested in contacting me.")
+        st.session_state.visitor_count += 1
 
-st.write(
-    "**Total Interactions:**",
-    st.session_state.visitor_count
-)
+        if visitor_name:
+
+            st.success(
+                f"Thank you, {visitor_name}, for viewing my resume."
+            )
+
+        else:
+
+            st.success(
+                "Thank you for viewing my resume."
+            )
+
+    st.caption(
+        f"Total interactions: {st.session_state.visitor_count}"
+    )
 
 
+# -------------------------------------------------
 # FOOTER
+# -------------------------------------------------
 st.divider()
 
 st.caption(
-    "Online Resume | THARANI SEKAR | IT Networking Student"
+    "THARANI SEKAR | IT NETWORKING STUDENT | ONLINE RESUME"
 )
