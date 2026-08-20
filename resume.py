@@ -3,7 +3,7 @@ import pandas as pd
 
 # PAGE SETTINGS
 
-st.set_page_config(
+st.set_page_config( 
     page_title="Tharani Sekar Resume",
     page_icon="💻",
     layout="wide"
